@@ -17,6 +17,7 @@ class _RegistrationState extends State<Registration> {
   TextEditingController passwordController = TextEditingController();
   bool _isNotValidate = false;
 
+//register user
   void registerUser() async {
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       var regBody = {

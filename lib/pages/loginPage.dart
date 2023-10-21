@@ -28,6 +28,7 @@ class _SignInPageState extends State<SignInPage> {
     prefs = await SharedPreferences.getInstance();
   }
 
+  //user login function
   void loginUser() async {
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       var reqBody = {
