@@ -29,7 +29,8 @@ class _DashboardState extends State<Dashboard> {
     'Rocell Ceramics',
     'JAT Solutions',
     'Dulux Paints',
-    'IKEA'
+    'IKEA',
+    '7 ELEVEN'
   ];
 
   String? _selectedCompany;
@@ -44,38 +45,12 @@ class _DashboardState extends State<Dashboard> {
     getOrdersList(userId);
   }
 
-//add method
-  // void addTodo() async {
-  //   if (_todoTitle.text.isNotEmpty && _todoDesc.text.isNotEmpty) {
-  //     var regBody = {
-  //       "userId": userId,
-  //       "title": _todoTitle.text,
-  //       "desc": _todoDesc.text
-  //     };
-
-  //     var response = await http.post(Uri.parse(addtodo),
-  //         headers: {"Content-Type": "application/json"},
-  //         body: jsonEncode(regBody));
-
-  //     var jsonResponse = jsonDecode(response.body);
-
-  //     print(jsonResponse['status']);
-
-  //     if (jsonResponse['status']) {
-
-  //       _todoDesc.clear();
-  //       _todoTitle.clear();
-  //       Navigator.pop(context);
-  //       getTodoList(userId);
-  //     } else {
-  //       print("SomeThing Went Wrong");
-  //     }
-  //   }
-  // }
-
   //add new order method
   void addNewOrder() async {
-    if (_selectedCompany != null && _warehouseController.text.isNotEmpty) {
+    if (_selectedCompany != null &&
+        _warehouseController.text.isNotEmpty &&
+        _referenceController.text.isNotEmpty &&
+        _requiredDateController.text.isNotEmpty) {
       var regBody = {
         "userId": userId,
         "Company": _selectedCompany,
@@ -90,9 +65,9 @@ class _DashboardState extends State<Dashboard> {
         body: jsonEncode(regBody),
       );
 
-      var jsonResponse = jsonDecode(response.body);
+      //var jsonResponse = jsonDecode(response.body);
 
-      if (jsonResponse['status']) {
+      if (response.statusCode == 200) {
         _selectedCompany = null;
         _warehouseController.clear();
         _companyController.clear();
@@ -100,9 +75,27 @@ class _DashboardState extends State<Dashboard> {
         _requiredDateController.clear();
         Navigator.pop(context);
         getOrdersList(userId);
+
+        // Show a success snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Order added successfully'),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.green,
+          ),
+        );
       } else {
-        print("Something Went Wrong");
+        print(" ⛔ Something Went Wrong fill the fields");
       }
+    } else {
+      // Show a warning snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Fill All The Required Fields'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -132,7 +125,11 @@ class _DashboardState extends State<Dashboard> {
                   fillColor: Colors.white,
                   hintText: "Company",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
                   ),
                 ),
               ).p4().px8(),
@@ -181,9 +178,17 @@ class _DashboardState extends State<Dashboard> {
                     body: jsonEncode(regBody),
                   );
 
-                  var jsonResponse = jsonDecode(response.body);
+                  //var jsonResponse = jsonDecode(response.body);
 
-                  if (jsonResponse['status']) {
+                  if (response.statusCode == 200) {
+                    // Show a success snackbar
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Order updated successfully'),
+                        duration: Duration(seconds: 2),
+                        backgroundColor: Colors.blue,
+                      ),
+                    );
                     Navigator.pop(context);
                     getOrdersList(userId);
                   } else {
@@ -221,9 +226,17 @@ class _DashboardState extends State<Dashboard> {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(regBody));
 
-    var jsonResponse = jsonDecode(response.body);
-    if (jsonResponse['status']) {
+    //var jsonResponse = jsonDecode(response.body);
+    if (response.statusCode == 200) {
       getOrdersList(userId);
+      // Show a success snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Order Deleted Successfully'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.orange,
+        ),
+      );
     }
   }
 
@@ -267,7 +280,7 @@ class _DashboardState extends State<Dashboard> {
 
                 //title
                 Text(
-                  'Smart Home Construrctions Pvt. Ltd.',
+                  'Smart Home Constructions Pvt. Ltd.',
                   style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w700),
                 ),
                 SizedBox(height: 8.0),
@@ -326,10 +339,30 @@ class _DashboardState extends State<Dashboard> {
                             child: Card(
                               borderOnForeground: false,
                               child: ListTile(
-                                leading: Icon(Icons.task),
-                                title: Text('${items![index]['Company']}'),
-                                subtitle: Text('${items![index]['Warehouse']}'),
-                                trailing: Icon(Icons.arrow_back),
+                                leading: Icon(
+                                  Icons.task,
+                                  color: Colors.black,
+                                ),
+                                title: Text(
+                                  '${items![index]['Company']}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  '📍 ${items![index]['Warehouse']} | ' +
+                                      '' +
+                                      ' 💻 Reference : ' +
+                                      '${items![index]['Reference']}',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black.withOpacity(0.9)),
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
                               ),
                             ),
                           );

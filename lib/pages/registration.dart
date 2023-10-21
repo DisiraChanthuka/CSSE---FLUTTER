@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:velocity_x/velocity_x.dart';
-import '../components/applogo.dart';
 import 'loginPage.dart';
 import 'package:http/http.dart' as http;
 import '../config/config.dart';
@@ -33,7 +32,7 @@ class _RegistrationState extends State<Registration> {
 
       print(jsonResponse['status']);
 
-      if (jsonResponse['status']) {
+      if (response.statusCode == 200) {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => SignInPage()));
       } else {

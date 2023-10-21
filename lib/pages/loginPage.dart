@@ -4,7 +4,6 @@ import 'package:flutter_todo_app/pages/dashboard.dart';
 import 'package:flutter_todo_app/pages/registration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocity_x/velocity_x.dart';
-import '../components/applogo.dart';
 import 'package:http/http.dart' as http;
 import '../config/config.dart';
 
@@ -21,7 +20,6 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initSharedPref();
   }
@@ -42,7 +40,7 @@ class _SignInPageState extends State<SignInPage> {
           body: jsonEncode(reqBody));
 
       var jsonResponse = jsonDecode(response.body);
-      if (jsonResponse['status']) {
+      if (response.statusCode == 200) {
         var myToken = jsonResponse['token'];
         prefs.setString('token', myToken);
         Navigator.push(context,
@@ -160,13 +158,12 @@ class _SignInPageState extends State<SignInPage> {
                 MaterialPageRoute(builder: (context) => Registration()));
           },
           child: Container(
-              height: 25,
-              color: Colors.lightBlue,
-              child: Center(
-                  child: "New site manager? Sign Up Here"
-                      .text
-                      .white
-                      .makeCentered())),
+            height: 40,
+            color: Colors.lightBlue,
+            child: Center(
+                child:
+                    "New site manager? Sign Up Here".text.white.makeCentered()),
+          ),
         ),
       ),
     );
